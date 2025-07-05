@@ -33,6 +33,7 @@ import os
 from p3_source import df_raw
 
 _ = os.getcwd()
+df_raw
 ```
 
 ## Elevator pitch
@@ -42,14 +43,23 @@ _A Client has requested this analysis and this is your one shot of what you woul
 
 ## QUESTION|TASK 1
 
-__Fix all of the varied missing data types in the data to be consistent (all missing values should be displayed as “NaN”).__ In your report include one record example (one row) from your new data, in the raw JSON format. Your example should display the "NaN" for at least one missing value.__  
+__Fix all of the varied missing data types in the data to be consistent (all missing values should be displayed as “NaN”).__ 
+__In your report include one record example (one row) from your new data, in the raw JSON format. Your example should display the "NaN" for at least one missing value.__  
 
-_type your results and analysis here_
+_So I went through the dataset and made sure every instance (row) had all properties (column) and that if the value isn't present it was set to pandas.NA. After that, I checked to see if any of the properties that ought to be ints are failing integer casting, and attempted to fix them by casting that value as a string, removing all non-numeric characters from the value and casting it back to an int. I then handle all instances of empty strings by setting them to pandas.NA and then cast every column to its proper type. I also removed all instances(rows) that didn't have a clear month, assuming that rows that don't give a discernable month are useless and a potential skew of the data. Then i fixed a misspelling of february i found. If a value displays as "None" it's pd.NA. I confirmed this by checking a known NA value. If this was a real project, I'd create a supplamentary table to map airport codes to airport names, but that wasn't part of the assignment_
 
 ```{python}
-from p3_source import df
+from p3_source import q1_example, df
+from pandas import NA, isna
 
-df.to_string()
+# i know row 13 has a nullish value for airport
+row_13 = df.loc[13]
+if row_13["airport_name"] == "None":
+    print("'airport_name' for row 13 is literally a string called 'None'")
+elif isna(row_13["airport_name"]):
+    print("'airport_name' for row 13 is actually pd.NA")
+
+q1_example
 ```
 
 
