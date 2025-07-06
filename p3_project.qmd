@@ -114,7 +114,9 @@ According to the BTS website, the “Weather” category only accounts for sever
 
 _I created a map (`average_weather_rates`) based on the rules above that gives the average percent of late_aircraft or nas delays by month, and then created a dataframe that puts the late_aircraft multipled by the percent for the row's month in a late aircraft weather column, and the same for nas delays. I also added columns that sums late aircraft weather delays and nas weather delays, and one that sums that sum and the actual weather delays to get total mild and severe weather delays._
 
-_The values for the mild weather delays are by nesessity not integers, 'cause they're based on extrapolation from the monthly weather delay proportions set down in the rules. Assuming the rates in the rules represent averages based on representative data, then my data will faithfully extrapolate approximate values based on those average rates. I'm leaving them as floating-point vals instead of rounding to ints so as to no obfuscate information._
+_The values for the mild weather delays are by nesessity not integers, because they're based on extrapolation from the monthly weather delay proportions from the rules._
+
+_Assuming the rates in the rules come from averages based on data that is representative of the flight data in the dataset, then my data faithfully extrapolates (approximate) values based on those average rates. I'm leaving them as floating-point values instead of rounding to integers so as to not obfuscate information._
 
 ```{python}
 from p3_source import q4_data
