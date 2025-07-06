@@ -46,20 +46,13 @@ _A Client has requested this analysis and this is your one shot of what you woul
 __Fix all of the varied missing data types in the data to be consistent (all missing values should be displayed as “NaN”).__ 
 __In your report include one record example (one row) from your new data, in the raw JSON format. Your example should display the "NaN" for at least one missing value.__  
 
-_So I went through the dataset and made sure every instance (row) had all properties (column) and that if the value isn't present it was set to pandas.NA. After that, I checked to see if any of the properties that ought to be ints are failing integer casting, and attempted to fix them by casting that value as a string, removing all non-numeric characters from the value and casting it back to an int. I then handle all instances of empty strings by setting them to pandas.NA and then cast every column to its proper type. I also removed all instances(rows) that didn't have a clear month, assuming that rows that don't give a discernable month are useless and a potential skew of the data. Then i fixed a misspelling of february i found. If a value displays as "None" it's pd.NA. I confirmed this by checking a known NA value. If this was a real project, I'd create a supplamentary table to map airport codes to airport names, but that wasn't part of the assignment_
+_So I went through the dataset and made sure every instance (row) had all properties (column) and that if the value isn't present it was set to pandas.NA. After that, I checked to see if any of the properties that ought to be ints are failing integer casting, and attempted to fix them by casting that value as a string, removing all non-numeric characters from the value and casting it back to an int. I then handle all instances of empty strings by setting them to pandas.NA and then cast every column to its proper type. I also removed all instances(rows) that didn't have a clear month, assuming that rows that don't give a discernable month are useless and a potential skew of the data. Then i fixed a misspelling of february i found. If this was a real project, I'd create a supplamentary table to map airport codes to airport names, but that wasn't part of the assignment_
 
 ```{python}
 from p3_source import q1_example, df
 from pandas import NA, isna
 
-# i know row 13 has a nullish value for airport
-row_13 = df.loc[13]
-if row_13["airport_name"] == "None":
-    print("'airport_name' for row 13 is literally a string called 'None'")
-elif isna(row_13["airport_name"]):
-    print("'airport_name' for row 13 is actually pd.NA")
-
-q1_example
+q1_example.head().style.format(na_rep="NaN")
 ```
 
 
@@ -67,25 +60,46 @@ q1_example
 
 __Which airport has the worst delays?__ Describe the metric you chose, and why you chose it to determine the “worst” airport. Your answer should include a summary table that lists (for each airport) the total number of flights, total number of delayed flights, proportion of delayed flights, and average delay time in hours.   
 
-_type your results and analysis here_
+_pandas dataframe styler is giving me trouble, but here's the data that indicates that SFO airport leads in both average time of delay per flight through all months and percent of flights that have a delay_
 
 ```{python}
 # Include and execute your code here
+from p3_source import q2_data
 
 
+def hours_format(x):
+    if pd.isna(x):
+        return ""
+    h = int(x)
+    m = int(round((x - h) * 60))
+    return f"{h}h {m}m" if m else f"{h}h"
+
+
+def percent_format(x):
+    return f"{x*100:.1f}%" if pd.notna(x) else ""
+
+
+q2_data.style.format(
+    {"delay_percent": percent_format, "avg_delay_per_flight_hours": hours_format}
+)
+
+q2_data
 ```
-
 
 
 ## QUESTION|TASK 3
 
 __What is the best month to fly if you want to avoid delays of any length?__ Describe the metric you chose and why you chose it to calculate your answer. Include one chart to help support your answer, with the x-axis ordered by month. (To answer this question, you will need to remove any rows that are missing the `Month` variable.)  
 
-_type your results and analysis here_
+_I've already excluded rows that didn't provide month data, so all records represent an individual month/airport combo. Since the question specified delays of any length, delay time will not be considered. based on sums of delayed flights from all airports for each month combined with sums of total flights, it seems clear that september at 16.5% missed flights and december at 16.7% missed flights._
 
 ```{python}
-# Include and execute your code here
+from p3_source import q3_data, q3_chart
 
+q3_data
+```
+```{python}
+q3_chart
 ```
 
 
