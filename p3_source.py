@@ -85,3 +85,158 @@ q3_chart = (
     + labs(title="Monthly Flight Delay Percentage", x="Month", y="Delay Percentage")
     + scale_x_continuous(breaks=q3_data["month_no"], labels=q3_data["month"])
 )
+
+q4_data_raw = df.copy()
+
+average_weather_rates = {
+    "january": {
+        "late": 0.3,
+        "nas": 0.4,
+    },
+    "february": {
+        "late": 0.3,
+        "nas": 0.4,
+    },
+    "march": {
+        "late": 0.3,
+        "nas": 0.4,
+    },
+    "april": {
+        "late": 0.3,
+        "nas": 0.65,
+    },
+    "may": {
+        "late": 0.3,
+        "nas": 0.65,
+    },
+    "june": {
+        "late": 0.3,
+        "nas": 0.65,
+    },
+    "july": {
+        "late": 0.3,
+        "nas": 0.65,
+    },
+    "august": {
+        "late": 0.3,
+        "nas": 0.65,
+    },
+    "september": {
+        "late": 0.3,
+        "nas": 0.4,
+    },
+    "october": {
+        "late": 0.3,
+        "nas": 0.4,
+    },
+    "november": {
+        "late": 0.3,
+        "nas": 0.4,
+    },
+    "december": {
+        "late": 0.3,
+        "nas": 0.4,
+    },
+}
+
+q4_data_raw["delays_late_aircraft_weather_extrapolated"] = (
+    q4_data_raw["month"]
+    .str.lower()
+    .map(lambda month: average_weather_rates[month]["late"])
+    * q4_data_raw["num_of_delays_late_aircraft"]
+)
+
+q4_data_raw["delays_nas_weather_extrapolated"] = (
+    q4_data_raw["month"]
+    .str.lower()
+    .map(lambda month: average_weather_rates[month]["nas"])
+    * q4_data_raw["num_of_delays_nas"]
+)
+
+q4_data_raw["delays_weather_mild_total"] = (
+    q4_data_raw["delays_late_aircraft_weather_extrapolated"]
+    + q4_data_raw["delays_nas_weather_extrapolated"]
+)
+
+q4_data_raw["delays_weather_all"] = (
+    q4_data_raw["delays_weather_mild_total"] + q4_data_raw["num_of_delays_weather"]
+)
+
+
+q4_data = q4_data_raw[
+    [
+        "airport_code",
+        "month",
+        "year",
+        "num_of_flights_total",
+        "num_of_delays_total",
+        "num_of_delays_late_aircraft",
+        "delays_late_aircraft_weather_extrapolated",
+        "num_of_delays_nas",
+        "delays_nas_weather_extrapolated",
+        "delays_weather_mild_total",
+        "num_of_delays_weather",
+        "delays_weather_all",
+    ]
+].rename(
+    columns={
+        "num_of_flights_total": "total_flights",
+        "num_of_delays_total": "total_delays",
+        "num_of_delays_late_aircraft": "late_delays",
+        "num_of_delays_nas": "nas_delays",
+        "delays_late_aircraft_weather_extrapolated": "late_weather_ext",
+        "delays_nas_weather_extrapolated": "nas_weather_ext",
+        "delays_weather_mild_total": "weather_mild_total",
+        "num_of_delays_weather": "weather_severe",
+        "delays_weather_all": "weather_all",
+    }
+)
+
+q5_data = q4_data.groupby("airport_code").agg(
+    total_flights=("total_flights", "mean"),
+    total_delays=("total_delays", "mean"),
+    delays_weather=("weather_all", "mean"),
+    delays_weather_mild=("weather_mild_total", "mean"),
+    delays_weather_severe=("weather_severe", "mean"),
+)
+
+q5_data["delay_rate"] = q5_data["total_delays"] / q5_data["total_flights"]
+
+q5_data["weather_delay_rate"] = q5_data["delays_weather"] / q5_data["total_flights"]
+
+q5_data["weather_mild_delay_rate"] = (
+    q5_data["delays_weather_mild"] / q5_data["total_flights"]
+)
+
+q5_data["weather_severe_delay_rate"] = (
+    q5_data["delays_weather_severe"] / q5_data["total_flights"]
+)
+
+q5_data_display = q5_data[
+    [
+        "weather_delay_rate",
+        "weather_mild_delay_rate",
+        "weather_severe_delay_rate",
+    ]
+].reset_index()
+
+q5_data_melted = q5_data_display.melt(
+    id_vars="airport_code",
+    value_vars=["weather_mild_delay_rate", "weather_severe_delay_rate"],
+    var_name="delay_type",
+    value_name="delay_rate",
+).sort_values(by=["airport_code", "delay_type"])
+
+q5_chart = (
+    ggplot(
+        data=q5_data_melted,
+        mapping=aes(x="airport_code", y="delay_rate", fill="delay_type"),
+    )
+    + geom_bar(stat="identity", position="stack")
+    + labs(
+        title="Average Monthly Weather Delay Rates by Airport",
+        x="Airport Code",
+        y="Weather Delay Rate",
+        fill="Delay Type",
+    )
+)

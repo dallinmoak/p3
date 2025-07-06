@@ -109,40 +109,32 @@ q3_chart
 According to the BTS website, the “Weather” category only accounts for severe weather delays. Mild weather delays are not counted in the “Weather” category, but are actually included in both the “NAS” and “Late-Arriving Aircraft” categories. __Your job is to create a new column that calculates the total number of flights delayed by weather (both severe and mild).__ You will need to replace all the missing values in the Late Aircraft variable with the mean. Show your work by printing the first 5 rows of data in a table. Use these three rules for your calculations:  
 
     a. 100% of delayed flights in the Weather category are due to weather  
-    a. 30% of all delayed flights in the Late-Arriving category are due to weather  
-    a. From April to August, 40% of delayed flights in the NAS category are due to weather. The rest of the months, the proportion rises to 65%    
+    b. 30% of all delayed flights in the Late-Arriving category are due to weather  
+    c. From April to August, 40% of delayed flights in the NAS category are due to weather. The rest of the months, the proportion rises to 65%    
 
-_type your results and analysis here_
+_I created a map (`average_weather_rates`) based on the rules above that gives the average percent of late_aircraft or nas delays by month, and then created a dataframe that puts the late_aircraft multipled by the percent for the row's month in a late aircraft weather column, and the same for nas delays. I also added columns that sums late aircraft weather delays and nas weather delays, and one that sums that sum and the actual weather delays to get total mild and severe weather delays._
 
-```{python}
-# Include and execute your code here
-
-```
-
+_The values for the mild weather delays are by nesessity not integers, 'cause they're based on extrapolation from the monthly weather delay proportions set down in the rules. Assuming the rates in the rules represent averages based on representative data, then my data will faithfully extrapolate approximate values based on those average rates. I'm leaving them as floating-point vals instead of rounding to ints so as to no obfuscate information._
 
 ```{python}
-# Include and execute your code here
+from p3_source import q4_data
 
+q4_data
 ```
-
-
-```{python}
-# Include and execute your code here
-
-```
-
-
 
 ## QUESTION|TASK 5
 
 __Using the new weather variable calculated above, create a barplot showing the proportion of all flights that are delayed by weather at each airport. Describe what you learn from this graph.__  
 
-_type your results and analysis here_
+_I agregated the weather breakdown data from q4 by airport, and then melted it so that there was a row for each airport/weather category combo (ATL Mild, ALT Severe, DEN Mild, DEN Severe, ect). then I stacked 'em so you could see them as sums. this view allowed me to see both the relative rates for each category of weather delay, but also the proportion of mild to severe weather delays. it looks like there were about 1 severe weather delays for every 10 mild weather delays. The two highest weather delays, san francisco and chicago make sense to me; the fog in SF is famous and chicago's got all that cold wind off lake michigan_
 ```{python}
-# Include and execute your code here
+from p3_source import q5_data_melted, q5_chart
 
+q5_data_melted
 ```
-
+```{python}
+q5_chart
+```
 
 ---
 
