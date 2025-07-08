@@ -37,9 +37,7 @@ df_raw
 ```
 
 ## Elevator pitch
-_A SHORT (2-3 SENTENCES) PARAGRAPH THAT `DESCRIBES KEY INSIGHTS` TAKEN FROM METRICS IN THE PROJECT RESULTS THINK TOP OR MOST IMPORTANT RESULTS._ (Note: this is not a summary of the project, but a summary of the results.)
-
-_A Client has requested this analysis and this is your one shot of what you would say to your boss in a 2 min elevator ride before he takes your report and hands it to the client._
+_The dataset from from BTS represents data about flight delays over a decade from seven airports. The data indicates that the san Francisco airport has the most delays of any length, but that fact obscures the fact that there is a large variability in the length of the delays. If an airport has 100% of its flights delayed for just 1 minute, that wouldn't really be a big deal. The most important metric probably represent delayed flights measured as a count against on-time flights, but moderated by the amount of time the thing was delayed. Further research is indicated. This anylist will request a grant for more study of this dataset._
 
 ## QUESTION|TASK 1
 
