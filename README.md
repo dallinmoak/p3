@@ -10,5 +10,5 @@ pip freeze > requirements.txt
 install and run the notebook:
 ```bash
 pip install -r requirements.txt
-quarto render {notebook}.qmd --out index.html
+quarto render {notebook}.qmd --output index.html
 ````
